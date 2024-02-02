@@ -5,6 +5,7 @@ from tkinter import scrolledtext, ttk
 
 
 selected_model = 0
+icon_path = "icon/szop.ico"
 
 
 def send_message():
@@ -48,9 +49,11 @@ def select_model(model_number):
     elif model_number == 3:
         third_button.config(bg=CHOOSEN_BUTTON_COLOR)
 
+
 app = tk.Tk()
 app.title(APP_TITLE)
 app.configure(bg=BG_COLOR)
+app.iconbitmap(default=icon_path)
 
 screen_width = app.winfo_screenwidth()
 screen_height = app.winfo_screenheight()
