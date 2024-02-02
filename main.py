@@ -22,6 +22,10 @@ def reset_chat():
     chat_history.config(state=tk.DISABLED)
 
 app = tk.Tk()
+
+icon_path = 'icon/szop2.ico'
+app.iconbitmap(default=icon_path)
+
 app.title(APP_TITLE)
 app.configure(bg=BG_COLOR)
 
