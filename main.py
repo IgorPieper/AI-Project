@@ -3,12 +3,16 @@ from styles import *
 import tkinter as tk
 from tkinter import scrolledtext, ttk
 from transformers import MBartForConditionalGeneration, MBart50TokenizerFast
+from transformers import pipeline
 
 # Konfiguracja Translatora
 model = MBartForConditionalGeneration.from_pretrained("facebook/mbart-large-50-many-to-many-mmt")
 tokenizer = MBart50TokenizerFast.from_pretrained("facebook/mbart-large-50-many-to-many-mmt")
 
 tokenizer.src_lang = "pl_PL"
+
+# Konfiguracja Emocji
+classifier = pipeline(task="text-classification", model="SamLowe/roberta-base-go_emotions", top_k=None)
 
 
 selected_model = 0
@@ -36,6 +40,18 @@ def send_message():
         if selected_model == 1:
             simulated_response = "Tu będzie coś więcej"
             chat_history.insert(tk.END, f"{CHAT_NAME}: " + simulated_response + "\n", CHAT_NAME)
+
+        if selected_model == 2:
+            sentences = [response_str]
+            simulated_response = classifier(sentences)
+            chat_history.insert(tk.END, f"Emotions: ", CHAT_NAME)
+
+            for emotion in (simulated_response[0]):
+                if emotion['score'] > 0.1:
+                    chat_history.insert(tk.END, f"{emotion['label']}, ", CHAT_NAME)
+
+            chat_history.insert(tk.END, "\n\n", CHAT_NAME)
+
         chat_history.config(state=tk.DISABLED)
 
         # Clear the input box and set focus
