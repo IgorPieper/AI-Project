@@ -4,6 +4,8 @@ import tkinter as tk
 from tkinter import scrolledtext, ttk
 from transformers import MBartForConditionalGeneration, MBart50TokenizerFast
 from transformers import pipeline
+from gtts import gTTS
+import os
 
 # Konfiguracja Translatora
 model = MBartForConditionalGeneration.from_pretrained("facebook/mbart-large-50-many-to-many-mmt")
@@ -38,8 +40,8 @@ def send_message():
         chat_history.insert(tk.END, f"{CHAT_NAME}: " + response_str + "\n", CHAT_NAME)
 
         if selected_model == 1:
-            simulated_response = "Tu będzie coś więcej"
-            chat_history.insert(tk.END, f"{CHAT_NAME}: " + simulated_response + "\n", CHAT_NAME)
+            output = gTTS(text=response_str, lang="en", slow=False)
+            output.save("output.mp3")
 
         if selected_model == 2:
             sentences = [response_str]
