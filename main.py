@@ -43,6 +43,11 @@ def send_message():
             output = gTTS(text=response_str, lang="en", slow=False)
             output.save("output.mp3")
 
+            chat_history.insert(tk.END, f"Audio: ", CHAT_NAME)
+            chat_history.insert(tk.END, "Play" + "\n", "play_audio")
+            chat_history.tag_config("play_audio", foreground=CHAT_TEXT_COLOR, underline=1)
+            chat_history.tag_bind("play_audio", "<Button-1>", play_audio)
+
         if selected_model == 2:
             sentences = [response_str]
             simulated_response = classifier(sentences)
@@ -85,6 +90,10 @@ def select_model(model_number):
         third_button.config(bg=CHOOSEN_BUTTON_COLOR)
 
 
+def play_audio(event=None):
+    os.system("start output.mp3")  # Dla systemów Windows
+
+
 app = tk.Tk()
 app.title(APP_TITLE)
 app.configure(bg=BG_COLOR)
@@ -110,7 +119,7 @@ sidebar = tk.Frame(app, width=200, bg=SIDEBAR_COLOR)
 sidebar.pack(side=tk.LEFT, fill=tk.Y)
 
 # Przyciski na panelu bocznym
-first_button = tk.Button(sidebar, text="text to speech", command=lambda: select_model(1), bg=SIDEBAR_BUTTON_COLOR, font=FONT, fg=TEXT_COLOR)
+first_button = tk.Button(sidebar, text="Text to Speech", command=lambda: select_model(1), bg=SIDEBAR_BUTTON_COLOR, font=FONT, fg=TEXT_COLOR)
 first_button.pack(pady=10, padx=10, fill=tk.X)
 
 second_button = tk.Button(sidebar, text="Emotions", command=lambda: select_model(2), bg=SIDEBAR_BUTTON_COLOR, font=FONT, fg=TEXT_COLOR)
