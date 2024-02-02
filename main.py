@@ -2,6 +2,13 @@ from styles import *
 
 import tkinter as tk
 from tkinter import scrolledtext, ttk
+from transformers import MBartForConditionalGeneration, MBart50TokenizerFast
+
+# Konfiguracja Translatora
+model = MBartForConditionalGeneration.from_pretrained("facebook/mbart-large-50-many-to-many-mmt")
+tokenizer = MBart50TokenizerFast.from_pretrained("facebook/mbart-large-50-many-to-many-mmt")
+
+tokenizer.src_lang = "pl_PL"
 
 
 selected_model = 0
@@ -12,18 +19,28 @@ def send_message():
     user_input = user_input_box.get()
     if user_input:
         chat_history.config(state=tk.NORMAL)
-        chat_history.insert(tk.END, f"{YOUR_NAME}: " + user_input + "\n", f"{YOUR_NAME}")
-
-        # Symulowana odpowiedź
-        if selected_model == 0:
-            simulated_response = "Proszę najpierw wybierz model"
-        else:
-            simulated_response = "Otrzymałem: " + user_input  # Tutaj można dodać bardziej zaawansowaną logikę
-        chat_history.insert(tk.END, f"{CHAT_NAME}: " + simulated_response + "\n", f"{CHAT_NAME}")
-
+        chat_history.insert(tk.END, f"{YOUR_NAME}: " + user_input + "\n", YOUR_NAME)
         chat_history.config(state=tk.DISABLED)
-        chat_history.see(tk.END)
+
+        encoded_pl = tokenizer(user_input, return_tensors="pt")
+        generated_tokens = model.generate(
+            **encoded_pl,
+            forced_bos_token_id=tokenizer.lang_code_to_id["en_XX"]
+        )
+        simulated_response1 = tokenizer.batch_decode(generated_tokens, skip_special_tokens=True)
+
+        response_str = ' '.join(simulated_response1)  # Join list elements into a single string
+        chat_history.config(state=tk.NORMAL)
+        chat_history.insert(tk.END, f"{CHAT_NAME}: " + response_str + "\n", CHAT_NAME)
+
+        if selected_model == 1:
+            simulated_response = "Tu będzie coś więcej"
+            chat_history.insert(tk.END, f"{CHAT_NAME}: " + simulated_response + "\n", CHAT_NAME)
+        chat_history.config(state=tk.DISABLED)
+
+        # Clear the input box and set focus
         user_input_box.delete(0, tk.END)
+        user_input_box.focus_set()
 
 
 def reset_chat():
@@ -78,10 +95,10 @@ sidebar.pack(side=tk.LEFT, fill=tk.Y)
 first_button = tk.Button(sidebar, text="text to speech", command=lambda: select_model(1), bg=SIDEBAR_BUTTON_COLOR, font=FONT, fg=TEXT_COLOR)
 first_button.pack(pady=10, padx=10, fill=tk.X)
 
-second_button = tk.Button(sidebar, text="Model 2", command=lambda: select_model(2), bg=SIDEBAR_BUTTON_COLOR, font=FONT, fg=TEXT_COLOR)
+second_button = tk.Button(sidebar, text="Emotions", command=lambda: select_model(2), bg=SIDEBAR_BUTTON_COLOR, font=FONT, fg=TEXT_COLOR)
 second_button.pack(pady=10, padx=10, fill=tk.X)
 
-third_button = tk.Button(sidebar, text="Model 3", command=lambda: select_model(3), bg=SIDEBAR_BUTTON_COLOR, font=FONT, fg=TEXT_COLOR)
+third_button = tk.Button(sidebar, text="Stats", command=lambda: select_model(3), bg=SIDEBAR_BUTTON_COLOR, font=FONT, fg=TEXT_COLOR)
 third_button.pack(pady=10, padx=10, fill=tk.X)
 
 # Separator
