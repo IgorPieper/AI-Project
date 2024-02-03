@@ -5,8 +5,8 @@ Models:
 - Helsinki-NLP/opus-mt-pl-en (Translations) [https://huggingface.co/Helsinki-NLP/opus-mt-pl-en]
 - nllb-200-distilled-600M (Translations) [https://huggingface.co/facebook/nllb-200-distilled-600M/blob/main/README.md]
 
-- GTTS (Google Text-to-Speech) [https://www.kaggle.com/code/mohamedhanyyy/text-to-speech-converter-using-gtts/notebook]
-
 - SamLowe/roberta-base-go_emotions (Text Classification)
 
 - facebook/bart-large-cnn (Summary)
+
+- GTTS (Google Text-to-Speech) [https://www.kaggle.com/code/mohamedhanyyy/text-to-speech-converter-using-gtts/notebook]

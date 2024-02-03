@@ -14,7 +14,7 @@ nltk.download('wordnet')
 meteor_scores = []
 translated = []
 references_english = []
-which_model = 0
+which_model = 1
 
 # Bleu
 with open('data.json', 'r', encoding='utf-8') as json_file:
