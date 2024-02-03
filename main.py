@@ -10,11 +10,10 @@ from transformers import pipeline
 from gtts import gTTS
 import os
 
-
-# Konfiguracja Emocji
 classifier = pipeline(task="text-classification", model="SamLowe/roberta-base-go_emotions", top_k=None)
+summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
 
-selected_translator = 3
+selected_translator = 0
 selected_funcionality = 0
 icon_path = "icon/szop.ico"
 
@@ -22,6 +21,7 @@ icon_path = "icon/szop.ico"
 def send_message():
     user_input = user_input_box.get()
     if user_input:
+        user_input = user_input.replace("\n", "")
         chat_history.config(state=tk.NORMAL)
         chat_history.insert(tk.END, f"{YOUR_NAME}: " + user_input + "\n", YOUR_NAME)
         chat_history.config(state=tk.DISABLED)
@@ -36,7 +36,7 @@ def send_message():
             response_str = helsinki_translator(user_input)
 
         elif selected_translator == 3:
-            response_str = nllb_translator(user_input)
+            response_str = nllb_translator(f"{user_input}")
 
         else:
             response_str = "Nieudało się znaleźć modelu"
@@ -65,9 +65,12 @@ def send_message():
 
             chat_history.insert(tk.END, "\n\n", CHAT_NAME)
 
+        if selected_funcionality == 3:
+            sumup = summarizer(response_str, max_length=10000, min_length=1, do_sample=False)
+            chat_history.insert(tk.END, f"Summary: {sumup[0]['summary_text']} \n\n", CHAT_NAME)
+
         chat_history.config(state=tk.DISABLED)
 
-        # Clear the input box and set focus
         user_input_box.delete(0, tk.END)
         user_input_box.focus_set()
 
@@ -78,22 +81,39 @@ def reset_chat():
     chat_history.config(state=tk.DISABLED)
 
 
-def select_model(model_number):
+def select_functions(model_number):
     global selected_funcionality
     selected_funcionality = model_number
 
-    # Resetowanie kolorów wszystkich przycisków
     first_button.config(bg=SIDEBAR_BUTTON_COLOR)
     second_button.config(bg=SIDEBAR_BUTTON_COLOR)
     third_button.config(bg=SIDEBAR_BUTTON_COLOR)
 
-    # Zmiana koloru aktywnego przycisku
     if model_number == 1:
         first_button.config(bg=CHOOSEN_BUTTON_COLOR)
     elif model_number == 2:
         second_button.config(bg=CHOOSEN_BUTTON_COLOR)
     elif model_number == 3:
         third_button.config(bg=CHOOSEN_BUTTON_COLOR)
+
+
+def select_translator(another_model_number):
+    global selected_translator
+    selected_translator = another_model_number
+
+    fourth_button.config(bg=SIDEBAR_BUTTON_COLOR)
+    fifth_button.config(bg=SIDEBAR_BUTTON_COLOR)
+    sixth_button.config(bg=SIDEBAR_BUTTON_COLOR)
+    seventh_button.config(bg=SIDEBAR_BUTTON_COLOR)
+
+    if selected_translator == 1:
+        fifth_button.config(bg=CHOOSEN_BUTTON_COLOR)
+    elif selected_translator == 2:
+        sixth_button.config(bg=CHOOSEN_BUTTON_COLOR)
+    elif selected_translator == 3:
+        seventh_button.config(bg=CHOOSEN_BUTTON_COLOR)
+    else:
+        fourth_button.config(bg=CHOOSEN_BUTTON_COLOR)
 
 
 def play_audio(event=None):
@@ -124,19 +144,32 @@ main_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 sidebar = tk.Frame(app, width=200, bg=SIDEBAR_COLOR)
 sidebar.pack(side=tk.LEFT, fill=tk.Y)
 
-# Przyciski na panelu bocznym
-first_button = tk.Button(sidebar, text="Text to Speech", command=lambda: select_model(1), bg=SIDEBAR_BUTTON_COLOR, font=FONT, fg=TEXT_COLOR)
+# Przyciski wybierające funkcje
+first_button = tk.Button(sidebar, text="Text to Speech", command=lambda: select_functions(1), bg=SIDEBAR_BUTTON_COLOR, font=FONT, fg=TEXT_COLOR)
 first_button.pack(pady=10, padx=10, fill=tk.X)
 
-second_button = tk.Button(sidebar, text="Emotions", command=lambda: select_model(2), bg=SIDEBAR_BUTTON_COLOR, font=FONT, fg=TEXT_COLOR)
+second_button = tk.Button(sidebar, text="Emotions", command=lambda: select_functions(2), bg=SIDEBAR_BUTTON_COLOR, font=FONT, fg=TEXT_COLOR)
 second_button.pack(pady=10, padx=10, fill=tk.X)
 
-third_button = tk.Button(sidebar, text="Stats", command=lambda: select_model(3), bg=SIDEBAR_BUTTON_COLOR, font=FONT, fg=TEXT_COLOR)
+third_button = tk.Button(sidebar, text="Summary", command=lambda: select_functions(3), bg=SIDEBAR_BUTTON_COLOR, font=FONT, fg=TEXT_COLOR)
 third_button.pack(pady=10, padx=10, fill=tk.X)
 
 # Separator
 separator = ttk.Separator(sidebar, orient='horizontal')
 separator.pack(pady=5, padx=10, fill=tk.X)
+
+# Przyciski wybierające model
+fourth_button = tk.Button(sidebar, text="Model Def", command=lambda: select_translator(0), bg=SIDEBAR_BUTTON_COLOR, font=FONT, fg=TEXT_COLOR)
+fourth_button.pack(pady=10, padx=10, fill=tk.X)
+
+fifth_button = tk.Button(sidebar, text="Model 2", command=lambda: select_translator(1), bg=SIDEBAR_BUTTON_COLOR, font=FONT, fg=TEXT_COLOR)
+fifth_button.pack(pady=10, padx=10, fill=tk.X)
+
+sixth_button = tk.Button(sidebar, text="Model 3", command=lambda: select_translator(2), bg=SIDEBAR_BUTTON_COLOR, font=FONT, fg=TEXT_COLOR)
+sixth_button.pack(pady=10, padx=10, fill=tk.X)
+
+seventh_button = tk.Button(sidebar, text="Model 4", command=lambda: select_translator(3), bg=SIDEBAR_BUTTON_COLOR, font=FONT, fg=TEXT_COLOR)
+seventh_button.pack(pady=10, padx=10, fill=tk.X)
 
 # Treść czatu
 chat_frame = tk.Frame(main_frame, bg=BG_COLOR)

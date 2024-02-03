@@ -2,8 +2,11 @@ Models:
 - googletrans 4.0.0-rc1 (Translations API)
 
 - facebook/mbart-large-50-many-to-many-mmt (Translations) [https://huggingface.co/facebook/mbart-large-50-many-to-many-mmt?text=stone]
-- Helsinki-NLP/opus-mt-pl-en (translation) [https://huggingface.co/Helsinki-NLP/opus-mt-pl-en]
+- Helsinki-NLP/opus-mt-pl-en (Translations) [https://huggingface.co/Helsinki-NLP/opus-mt-pl-en]
+- nllb-200-distilled-600M (Translations) [https://huggingface.co/facebook/nllb-200-distilled-600M/blob/main/README.md]
 
 - GTTS (Google Text-to-Speech) [https://www.kaggle.com/code/mohamedhanyyy/text-to-speech-converter-using-gtts/notebook]
 
 - SamLowe/roberta-base-go_emotions (Text Classification)
+
+- facebook/bart-large-cnn (Summary)

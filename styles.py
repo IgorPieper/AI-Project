@@ -11,6 +11,7 @@ YOUR_TEXT_COLOR = "#ffffff"
 CHAT_NAME = "SzopGPT"
 CHAT_TEXT_COLOR = "#FF5733"
 DIALOGUE_FONT = "Helvetica 13 bold"
+BONUS_FUNCTION_COLOR = "#ffd1dc"
 
 # User Input Box
 USER_INPUT_FONT = "Helvetica 20 bold"
