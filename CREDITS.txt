@@ -1,6 +1,8 @@
 Models:
+- googletrans 4.0.0-rc1 (Translations API)
+
 - facebook/mbart-large-50-many-to-many-mmt (Translations) [https://huggingface.co/facebook/mbart-large-50-many-to-many-mmt?text=stone]
-- googletrans 4.0.0-rc1 (Translations)
+- Helsinki-NLP/opus-mt-pl-en (translation) [https://huggingface.co/Helsinki-NLP/opus-mt-pl-en]
 
 - GTTS (Google Text-to-Speech) [https://www.kaggle.com/code/mohamedhanyyy/text-to-speech-converter-using-gtts/notebook]
 
