@@ -2,6 +2,7 @@ from styles import *
 from models.mbart import mbart_translator
 from models.helsinki import helsinki_translator
 from models.google import googletrans_translator
+from models.nllb import nllb_translator
 
 import tkinter as tk
 from tkinter import scrolledtext, ttk
@@ -13,7 +14,7 @@ import os
 # Konfiguracja Emocji
 classifier = pipeline(task="text-classification", model="SamLowe/roberta-base-go_emotions", top_k=None)
 
-selected_translator = 2
+selected_translator = 3
 selected_funcionality = 0
 icon_path = "icon/szop.ico"
 
@@ -33,6 +34,9 @@ def send_message():
 
         elif selected_translator == 2:
             response_str = helsinki_translator(user_input)
+
+        elif selected_translator == 3:
+            response_str = nllb_translator(user_input)
 
         else:
             response_str = "Nieudało się znaleźć modelu"
