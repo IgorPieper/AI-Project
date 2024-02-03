@@ -2,3 +2,5 @@ Required:
 - PyTorch [pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118]
 [pip install sentencepiece]
 [pip install protobuf]
+[pip install transformers accelerate sentencepiece]
+[pip install googletrans==4.0.0-rc1]

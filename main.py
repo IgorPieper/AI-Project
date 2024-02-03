@@ -2,22 +2,20 @@ from styles import *
 
 import tkinter as tk
 from tkinter import scrolledtext, ttk
-from transformers import MBartForConditionalGeneration, MBart50TokenizerFast
+from transformers import MBartForConditionalGeneration, MBart50TokenizerFast, AutoTokenizer, AutoModelForSeq2SeqLM
 from transformers import pipeline
 from gtts import gTTS
 import os
+from googletrans import Translator
 
 # Konfiguracja Translatora
-model = MBartForConditionalGeneration.from_pretrained("facebook/mbart-large-50-many-to-many-mmt")
-tokenizer = MBart50TokenizerFast.from_pretrained("facebook/mbart-large-50-many-to-many-mmt")
 
-tokenizer.src_lang = "pl_PL"
 
 # Konfiguracja Emocji
 classifier = pipeline(task="text-classification", model="SamLowe/roberta-base-go_emotions", top_k=None)
 
-
-selected_model = 0
+selected_translator = 2
+selected_funcionality = 0
 icon_path = "icon/szop.ico"
 
 
@@ -28,18 +26,38 @@ def send_message():
         chat_history.insert(tk.END, f"{YOUR_NAME}: " + user_input + "\n", YOUR_NAME)
         chat_history.config(state=tk.DISABLED)
 
-        encoded_pl = tokenizer(user_input, return_tensors="pt")
-        generated_tokens = model.generate(
-            **encoded_pl,
-            forced_bos_token_id=tokenizer.lang_code_to_id["en_XX"]
-        )
-        simulated_response1 = tokenizer.batch_decode(generated_tokens, skip_special_tokens=True)
+        if selected_translator == 0:
+            translator = Translator()
+            response_str = (translator.translate(user_input, src="pl", dest="en")).text
 
-        response_str = ' '.join(simulated_response1)  # Join list elements into a single string
+        elif selected_translator == 1:
+            model = MBartForConditionalGeneration.from_pretrained("facebook/mbart-large-50-many-to-many-mmt")
+            tokenizer = MBart50TokenizerFast.from_pretrained("facebook/mbart-large-50-many-to-many-mmt")
+            tokenizer.src_lang = "pl_PL"
+
+            encoded_pl = tokenizer(user_input, return_tensors="pt")
+            generated_tokens = model.generate(
+                **encoded_pl,
+                forced_bos_token_id=tokenizer.lang_code_to_id["en_XX"]
+            )
+            simulated_response1 = tokenizer.batch_decode(generated_tokens, skip_special_tokens=True)
+
+            response_str = ' '.join(simulated_response1)
+        elif selected_translator == 2:
+            tokenizer = AutoTokenizer.from_pretrained("Helsinki-NLP/opus-mt-pl-en")
+            model = AutoModelForSeq2SeqLM.from_pretrained("Helsinki-NLP/opus-mt-pl-en")
+
+            encoded_pl = tokenizer(user_input, return_tensors="pt")
+            output = model.generate(**encoded_pl)
+            response_str = tokenizer.decode(output[0], skip_special_tokens=True)
+
+        else:
+            response_str = "Nieudało się znaleźć modelu"
+
         chat_history.config(state=tk.NORMAL)
         chat_history.insert(tk.END, f"{CHAT_NAME}: " + response_str + "\n", CHAT_NAME)
 
-        if selected_model == 1:
+        if selected_funcionality == 1:
             output = gTTS(text=response_str, lang="en", slow=False)
             output.save("output.mp3")
 
@@ -47,8 +65,9 @@ def send_message():
             chat_history.insert(tk.END, "Play" + "\n", "play_audio")
             chat_history.tag_config("play_audio", foreground=CHAT_TEXT_COLOR, underline=1)
             chat_history.tag_bind("play_audio", "<Button-1>", play_audio)
+            chat_history.insert(tk.END, "\n")
 
-        if selected_model == 2:
+        if selected_funcionality == 2:
             sentences = [response_str]
             simulated_response = classifier(sentences)
             chat_history.insert(tk.END, f"Emotions: ", CHAT_NAME)
@@ -73,8 +92,8 @@ def reset_chat():
 
 
 def select_model(model_number):
-    global selected_model
-    selected_model = model_number
+    global selected_funcionality
+    selected_funcionality = model_number
 
     # Resetowanie kolorów wszystkich przycisków
     first_button.config(bg=SIDEBAR_BUTTON_COLOR)
