@@ -1,0 +1,24 @@
+{
+  "translations": [
+    {"polish": "Dzień dobry, jak się masz?", "english": "Good morning, how are you?"},
+    {"polish": "Czy możesz mi pomóc znaleźć drogę do najbliższego sklepu?", "english": "Can you help me find the way to the nearest store?"},
+    {"polish": "Jaka będzie pogoda jutro?", "english": "What will the weather be like tomorrow?"},
+    {"polish": "Ile kosztuje bilet do kina?", "english": "How much is a cinema ticket?"},
+    {"polish": "Czy ten autobus jedzie na lotnisko?", "english": "Does this bus go to the airport?"},
+    {"polish": "Mam rezerwację na nazwisko Kowalski.", "english": "I have a reservation under the name Kowalski."},
+    {"polish": "Gdzie mogę kupić bilety?", "english": "Where can I buy tickets?"},
+    {"polish": "Czy to jest daleko stąd?", "english": "Is it far from here?"},
+    {"polish": "Jaka jest najlepsza droga do centrum miasta?", "english": "What is the best way to get to the city center?"},
+    {"polish": "Czy mogę prosić o mapę?", "english": "May I have a map?"},
+    {"polish": "Kiedy otwieracie rano?", "english": "When do you open in the morning?"},
+    {"polish": "Czy ta restauracja serwuje dania wegetariańskie?", "english": "Does this restaurant offer vegetarian dishes?"},
+    {"polish": "Jak dojechać do najbliższej stacji metra?", "english": "How to get to the nearest subway station?"},
+    {"polish": "Czy mogę płacić kartą?", "english": "Can I pay by card?"},
+    {"polish": "Gdzie jest najbliższa apteka?", "english": "Where is the nearest pharmacy?"},
+    {"polish": "Ile czasu zajmuje dojazd do muzeum?", "english": "How long does it take to get to the museum?"},
+    {"polish": "Czy można tu parkować?", "english": "Is parking allowed here?"},
+    {"polish": "Jaki jest kod WiFi?", "english": "What is the WiFi code?"},
+    {"polish": "Czy ten pociąg zatrzymuje się w Krakowie?", "english": "Does this train stop in Krakow?"},
+    {"polish": "Gdzie mogę wynająć samochód?", "english": "Where can I rent a car?"}
+  ]
+}

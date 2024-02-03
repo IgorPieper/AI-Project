@@ -1,14 +1,13 @@
 from styles import *
+from models.mbart import mbart_translator
+from models.helsinki import helsinki_translator
+from models.google import googletrans_translator
 
 import tkinter as tk
 from tkinter import scrolledtext, ttk
-from transformers import MBartForConditionalGeneration, MBart50TokenizerFast, AutoTokenizer, AutoModelForSeq2SeqLM
 from transformers import pipeline
 from gtts import gTTS
 import os
-from googletrans import Translator
-
-# Konfiguracja Translatora
 
 
 # Konfiguracja Emocji
@@ -27,29 +26,13 @@ def send_message():
         chat_history.config(state=tk.DISABLED)
 
         if selected_translator == 0:
-            translator = Translator()
-            response_str = (translator.translate(user_input, src="pl", dest="en")).text
+            response_str = googletrans_translator(user_input)
 
         elif selected_translator == 1:
-            model = MBartForConditionalGeneration.from_pretrained("facebook/mbart-large-50-many-to-many-mmt")
-            tokenizer = MBart50TokenizerFast.from_pretrained("facebook/mbart-large-50-many-to-many-mmt")
-            tokenizer.src_lang = "pl_PL"
+            response_str = mbart_translator(user_input)
 
-            encoded_pl = tokenizer(user_input, return_tensors="pt")
-            generated_tokens = model.generate(
-                **encoded_pl,
-                forced_bos_token_id=tokenizer.lang_code_to_id["en_XX"]
-            )
-            simulated_response1 = tokenizer.batch_decode(generated_tokens, skip_special_tokens=True)
-
-            response_str = ' '.join(simulated_response1)
         elif selected_translator == 2:
-            tokenizer = AutoTokenizer.from_pretrained("Helsinki-NLP/opus-mt-pl-en")
-            model = AutoModelForSeq2SeqLM.from_pretrained("Helsinki-NLP/opus-mt-pl-en")
-
-            encoded_pl = tokenizer(user_input, return_tensors="pt")
-            output = model.generate(**encoded_pl)
-            response_str = tokenizer.decode(output[0], skip_special_tokens=True)
+            response_str = helsinki_translator(user_input)
 
         else:
             response_str = "Nieudało się znaleźć modelu"
